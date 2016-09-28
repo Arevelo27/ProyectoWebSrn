@@ -7,7 +7,6 @@ package com.proyectoweb.srn.control;
 
 import com.proyectoweb.srn.to.UsuarioTO;
 import com.proyectoweb.srn.utilidades.FacesUtils;
-import com.proyectoweb.srn.utilidades.ReglasDeNavegacion;
 import com.proyectoweb.srn.utilidades.UtilidadesSeguridad;
 import java.io.Serializable;
 import javax.faces.application.ViewExpiredException;
