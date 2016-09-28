@@ -5,44 +5,101 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
                 template="template/tmpInicial.xhtml">
+    <link href="../resources/css/cssLayout.css" rel="stylesheet" type="text/css"/>
+
     <ui:define name="content">
-        <!--load resource bundle for this page only--> 
-        <f:loadBundle basename="com.proyectoweb.srn.utilidades.messages" var="msg"/>
-        
-        <h2>#{msg['vista.frmUsuario']}</h2>
-        <br></br>
-        <p:panel header="Contenido #1" toggleable="true" >
-            <p:panelGrid columns="2">
-                <p:panel>
-                    <ol>
-                        <li><h:outputLabel value="#{msg.message}" /></li>
+        <h:form id="frmUsuario">
+            <!--<p:growl id="growl" sticky="true" showDetail="true"/>-->
+            <!--load resource bundle for this page only--> 
+            <f:loadBundle basename="com.proyectoweb.srn.utilidades.messages" var="msg"/>
 
-                        <li><h:outputText value="#{msg['message.test1']}" /></li>
+            <h1 style="color: black">#{msg['vista.frmUsuario']}</h1>
 
-                        <li><h:outputText value="#{msg['message.test2']}" /></li>
-                        <!--<li><h:outputText value="#{msg['message.test2']}" escape="false" /></li>-->
+            <p:commandButton value=" Nuevo Usuario" 
+                             actionListener="#{usuarioBn.verForm()}" rendered="#{!usuarioBn.form}"  
+                             update="frmUsuario" process="@this">
 
-                        <li><h:outputText value="#{msg['message.test3']}" /></li>
-                        <!--<li><h:outputText value="#{msg['message.test3']}" escape="false" /></li>-->
-                    </ol>
-                </p:panel>
-                <p:panel>
-                    <ol>
-                        <li>
-                            <h:outputFormat value="#{msg['message.param1']}">
-                                <f:param value="param0" />
-                            </h:outputFormat>
-                        </li>
-                        <li>
-                            <h:outputFormat value="#{msg['message.param2']}">
-                                <f:param value="param0" />
-                                <f:param value="param1" />
-                            </h:outputFormat>
-                        </li>
-                    </ol>
-                </p:panel>
-            </p:panelGrid>
-        </p:panel>
+                <br></br>
+            </p:commandButton>
+
+            <p:panel header="Formulario de registro" toggleable="true" rendered="#{usuarioBn.form}">
+                <p:panelGrid id="panelGridUser" columns="3">
+
+                    <h:outputText value="(*) #{msg['frmUsuario.tipoIdentificación']}:" />                  
+                    <p:selectOneMenu id="tipoIdUser"
+                                     value="" required="true"
+                                     requiredMessage="Selecciona un tipo de documento">
+                        <f:selectItem itemLabel=" - - Seleccione - -" itemValue="" />
+                        <p:ajax event="change" partialSubmit="true"></p:ajax>
+                        <f:selectItems value="#{selectorTipoDoc.lista}"></f:selectItems>
+                    </p:selectOneMenu>
+                    <p:message for="tipoIdUser"/>
+
+                    <h:outputText value="(*) #{msg['frmUsuario.numeIdentificación']}:" />
+                    <p:inputText id="numIdUser"  value="" required="true" requiredMessage="Campo obloigatorio"/>
+                    <p:message for="numIdUser"/>
+
+                    <h:outputText value="(*) #{msg['frmUsuario.nombre']}:" />
+                    <p:inputText id="nomUser"  value="" required="true" requiredMessage="Campo obloigatorio"/>
+                    <p:message for="nomUser"/>
+
+                    <h:outputText value="(*) #{msg['frmUsuario.apellido']}:" />
+                    <p:inputText id="apeUser"  value="" required="true" requiredMessage="Campo obloigatorio"/>
+                    <p:message for="apeUser"/>
+
+                    <h:outputText value="(*) #{msg['frmUsuario.rol']}:" />                    
+                    <p:selectOneMenu id="rolUser"
+                                     value="" required="true"
+                                     requiredMessage="Selecciona un rol">
+                        <f:selectItem itemLabel=" - - Seleccione - -" itemValue="" />
+                        <p:ajax event="change" partialSubmit="true"></p:ajax>
+                        <f:selectItems value="#{selectorRol.lista}"></f:selectItems>
+                    </p:selectOneMenu>
+                    <p:message for="rolUser"/>
+
+                    <h:outputText value="(*) #{msg['frmUsuario.estado']}:" />
+                    <p:selectOneMenu id="estadoUser"
+                                     value="" required="true"
+                                     requiredMessage="Selecciona un estado">
+                        <f:selectItem itemLabel=" - - Seleccione - -" itemValue="" />
+                        <p:ajax event="change" partialSubmit="true"></p:ajax>
+                        <f:selectItems value="#{selectorEstado.lista}"></f:selectItems>
+                    </p:selectOneMenu>
+                    <p:message for="estadoUser"/>
+
+
+                </p:panelGrid>
+                <p:panelGrid columns="2" >
+                    <p:commandButton value=" Volver"
+                                     action="#{usuarioBn.volverForm()}" process="@this" immediate="true"
+                                     update="frmUsuario"></p:commandButton>
+                    <p:commandButton value="Aceptar" process="frmUsuario" update="frmUsuario"
+                                     action="#{usuarioBn.aceptar()}"></p:commandButton>
+                </p:panelGrid>
+
+            </p:panel>
+
+            <p:dataTable var="use" value="#{usuarioBn.listUser}" paginator="true" rows="10" rendered="#{!usuarioBn.form}" >
+                <p:column headerText="#{msg['frmUsuario.tipoIdentificación']}">
+                    <h:outputText value="#{use.tipoDocumento.strDescripcion}" />
+                </p:column>
+                <p:column headerText="#{msg['frmUsuario.numeIdentificación']}">
+                    <h:outputText value="#{use.codDocumento}" />
+                </p:column>
+                <p:column headerText="#{msg['frmUsuario.nombre']}">
+                    <h:outputText value="#{use.nombre}" />
+                </p:column>
+                <p:column headerText="#{msg['frmUsuario.apellido']}">
+                    <h:outputText value="#{use.apellido}" />
+                </p:column>
+                <p:column headerText="#{msg['frmUsuario.rol']}">
+                    <h:outputText value="#{use.codRol.strDescripcion}" />
+                </p:column>
+                <p:column headerText="#{msg['frmUsuario.estado']}">
+                    <h:outputText value="#{use.estado.strDescripcion}" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
     </ui:define>
 
 </ui:composition>

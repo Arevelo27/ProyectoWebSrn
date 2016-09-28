@@ -30,9 +30,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "SrnTblRol.findAll", query = "SELECT s FROM SrnTblRol s"),
+    @NamedQuery(name = "SrnTblRol.findMaxId", query = "SELECT  max(s.numIdRol) FROM SrnTblRol s"),
     @NamedQuery(name = "SrnTblRol.findByNumIdRol", query = "SELECT s FROM SrnTblRol s WHERE s.numIdRol = :numIdRol"),
     @NamedQuery(name = "SrnTblRol.findByStrDescripcion", query = "SELECT s FROM SrnTblRol s WHERE s.strDescripcion = :strDescripcion")})
 public class SrnTblRol implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -130,5 +132,5 @@ public class SrnTblRol implements Serializable {
     public String toString() {
         return "com.proyectoweb.srn.persistencia.SrnTblRol[ numIdRol=" + numIdRol + " ]";
     }
-    
+
 }

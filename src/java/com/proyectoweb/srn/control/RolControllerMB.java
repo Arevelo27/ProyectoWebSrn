@@ -7,6 +7,7 @@ package com.proyectoweb.srn.control;
 
 import com.proyectoweb.srn.modelo.SrnTblRol;
 import com.proyectoweb.srn.persistencia.SrnTblRolFacade;
+import com.proyectoweb.srn.utilidades.FacesUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -24,22 +26,28 @@ import javax.faces.bean.ViewScoped;
 public class RolControllerMB implements GenericBean<SrnTblRol>, Serializable {
 
     private SrnTblRol rol;
+    private String desc;
 
     @EJB
     private SrnTblRolFacade rolFacade;
     private boolean edit = false;
     private boolean form = false;
-    
+
     private List<SrnTblRol> listRol = new ArrayList<SrnTblRol>();
 
     @PostConstruct
     public void init() {
+        lista();
+    }
+
+    public void lista() {
         listRol = rolFacade.findAll();
     }
 
     @Override
     public void verForm() {
         rol = new SrnTblRol();
+        desc = "";
         form = true;
         edit = false;
     }
@@ -48,6 +56,7 @@ public class RolControllerMB implements GenericBean<SrnTblRol>, Serializable {
     public void volverForm() {
         form = false;
         edit = false;
+        lista();
     }
 
     /**
@@ -57,7 +66,7 @@ public class RolControllerMB implements GenericBean<SrnTblRol>, Serializable {
     @Override
     public void renderizarItem(SrnTblRol r) {
         rol = r;
-//        selMedida = p.getMedida();
+        desc = r.getStrDescripcion();
         form = true;
         edit = true;
     }
@@ -66,7 +75,7 @@ public class RolControllerMB implements GenericBean<SrnTblRol>, Serializable {
     public void eliminarItem(SrnTblRol r) {
         try {
             rolFacade.remove(r);
-            listRol = rolFacade.findAll();
+            lista();
         } catch (Exception e) {
         }
     }
@@ -77,16 +86,24 @@ public class RolControllerMB implements GenericBean<SrnTblRol>, Serializable {
         try {
             if (preAction()) {
                 if (!edit) {
-//                    if (personaDaoImpl.findById(productos.getId()) != null) {
-//                        productos.setId(personaDaoImpl.getCountOfAll());
-//                        productos.setMedida(selMedida);
-//                        personaDaoImpl.create(productos);
-//                        navegacion = REGLA_NAVEGACION;
+                    int id = 0;
+                    id = rolFacade.findMaxId();
+                    if (rolFacade.find(id) == null) {
+                        rol.setNumIdRol(id);
+                        rol.setStrDescripcion(desc);
+                        rolFacade.create(rol);
+
+                        desc = "";
+                        RequestContext.getCurrentInstance();
+                        FacesUtils.addInfoMessage("Registro exitoso");
 //                    }
-//                    }
+                    }
                 } else {
-//                    personaDaoImpl.update(productos);
-//                    navegacion = REGLA_NAVEGACION;
+                    rol.setStrDescripcion(desc);
+                    rolFacade.edit(rol);
+                    
+                    RequestContext.getCurrentInstance();
+                    FacesUtils.addInfoMessage("Actualizacón exitosa");
                 }
             }
         } catch (Exception e) {
@@ -130,6 +147,14 @@ public class RolControllerMB implements GenericBean<SrnTblRol>, Serializable {
 
     public void setListRol(List<SrnTblRol> listRol) {
         this.listRol = listRol;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
 }
