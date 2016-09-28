@@ -15,7 +15,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.context.RequestContext;
-
+//hola
 /**
  *
  * @author TSI
