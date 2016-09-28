@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="./template/tmpInicial.xhtml">
+
+
+    <ui:define name="content">
+        <!--load resource bundle for this page only--> 
+        <f:loadBundle basename="com.proyectoweb.srn.utilidades.messages" var="msg"/>
+
+        <h2>#{msg['vista.frmRol']}</h2>
+        
+        <br></br>
+        <p:panel header="Contenido #2" toggleable="true" >
+            <p:panelGrid columns="2">
+                <p:panel>
+                    <ol>
+                        <li><h:outputLabel value="#{msg.message}" /></li>
+
+                        <li><h:outputText value="#{msg['message.test1']}" /></li>
+
+                        <li><h:outputText value="#{msg['message.test2']}" /></li>
+                        <!--<li><h:outputText value="#{msg['message.test2']}" escape="false" /></li>-->
+
+                        <li><h:outputText value="#{msg['message.test3']}" /></li>
+                        <!--<li><h:outputText value="#{msg['message.test3']}" escape="false" /></li>-->
+                    </ol>
+                </p:panel>
+                <p:panel>
+                    <p:dataTable var="dominio" value="#{dominiosMb.miLista}" paginator="true" rows="10">
+                        <p:column headerText="Id Dominio">
+                            <h:outputText value="#{dominio.numIdDominio}" />
+                        </p:column>
+                        <p:column headerText="Nombre Dominio">
+                            <h:outputText value="#{dominio.strNombreDominio}" />
+                        </p:column>
+                        <p:column headerText="Descripcion">
+                            <h:outputText value="#{dominio.strDescripcion}" />
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </p:panelGrid>
+        </p:panel>
+    </ui:define>
+    <!--        </h:body>
+        </f:view>-->
+</ui:composition>
