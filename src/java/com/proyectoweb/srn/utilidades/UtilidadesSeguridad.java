@@ -15,9 +15,15 @@ import javax.servlet.http.HttpSession;
 
 public class UtilidadesSeguridad {
 
+    /*
+    *configName_persistence: nombre de configuración de la persistencia
+    */
+    public static final String NOMBRE_PERSISTENCIA = "WebSrnPU";
+
     /**
      * * Clase con mÃ©todos estÃ¡ticos de cifrado *
      */
+
     /**
      * Encripta el texto ingresado en MD5
      *
@@ -37,11 +43,11 @@ public class UtilidadesSeguridad {
         String ctxPath
                 = ((ServletContext) ctx.getContext()).getContextPath();
         try {
-                    // Usar el contexto de JSF para invalidar la sesiÃ³n,
+            // Usar el contexto de JSF para invalidar la sesiÃ³n,
             // NO EL DE SERVLETS (nada de HttpServletRequest)
             ((HttpSession) ctx.getSession(false)).invalidate();
 
-                    // RedirecciÃ³n de nuevo con el contexto de JSF,
+            // RedirecciÃ³n de nuevo con el contexto de JSF,
             // si se usa una HttpServletResponse fallarÃ¡.
             // Sin embargo, como ya estÃ¡ fuera del ciclo de vida
             // de JSF se debe usar la ruta completa -_-U

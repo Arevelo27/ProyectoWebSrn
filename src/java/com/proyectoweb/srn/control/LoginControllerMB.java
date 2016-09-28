@@ -5,17 +5,20 @@
  */
 package com.proyectoweb.srn.control;
 
+import com.proyectoweb.srn.modelo.SrnTblUsuario;
+import com.proyectoweb.srn.persistencia.SrnTblUsuarioFacade;
 import com.proyectoweb.srn.to.UsuarioTO;
 import com.proyectoweb.srn.utilidades.FacesUtils;
 import com.proyectoweb.srn.utilidades.UtilidadesSeguridad;
 import java.io.Serializable;
+import javax.ejb.EJB;
 import javax.faces.application.ViewExpiredException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.context.RequestContext;
-//hola
+
 /**
  *
  * @author TSI
@@ -28,17 +31,18 @@ public class LoginControllerMB implements Serializable {
     private String password;
     private UsuarioTO usuarioTo;
     private final HttpServletRequest httpServletRequest;
-//    private FsuperTblUsuarios usuario;
+    private SrnTblUsuario usuario;
 
-//    @EJB
-//    private FsuperTblUsuariosFacade usuariosFacade;
+    @EJB
+    private SrnTblUsuarioFacade usuariosFacade;
+
     /**
      *
      */
     public LoginControllerMB() {
         httpServletRequest = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("usuario");
-//        usuario = new FsuperTblUsuarios();
+        usuario = new SrnTblUsuario();
     }
 
     /**
@@ -52,23 +56,18 @@ public class LoginControllerMB implements Serializable {
             String password_md5 = UtilidadesSeguridad.getMD5(this.password);
             System.out.println(password_md5);
 
-//            if (usuariosFacade.LoginControl(username, password_md5)) {
-//                usuario = usuariosFacade.LoginSession(username, password_md5);
-//                return "inicio.xhtml?faces-redirect=true";
-//            }
             esNull = FacesUtils.isNotNull(username) && FacesUtils.isNotNull(password);
             if (esNull) {
-//          if (usuariosFacade.LoginControl(username, password_md5)) {
-                if (username.equals("a") && password.equals("a")) {
+                if (usuariosFacade.LoginControl(username, password_md5)) {
                     esNull = false;
-//                  usuario = usuariosFacade.LoginSession(username, password_md5);
+                    usuario = usuariosFacade.LoginSession(username, password_md5);
 
-                    usuarioTo.setApellidos("xxx");
-                    usuarioTo.setCodigo("xxx");
-                    usuarioTo.setContrasena(password);
-                    usuarioTo.setEstado("A");
-                    usuarioTo.setNombre(username);
-                    usuarioTo.setRolCodigo("User");
+                    usuarioTo.setApellidos(usuario.getApellido());
+                    usuarioTo.setCodigo(usuario.getCodDocumento()+"");
+                    usuarioTo.setContrasena(password_md5);
+                    usuarioTo.setEstado(usuario.getEstado().getStrCodEstado());
+                    usuarioTo.setNombre(usuario.getNombre());
+                    usuarioTo.setRolCodigo(usuario.getCodRol().getStrDescripcion());
                     usuarioTo.setLogin(username);
 
                     FacesUtils.getSession().setAttribute("usuario", usuarioTo);
@@ -85,7 +84,7 @@ public class LoginControllerMB implements Serializable {
         } catch (ViewExpiredException e) {
             FacesUtils.controlLog("INFO", e);
             UtilidadesSeguridad.getControlSession();
-        } catch (Exception ex) { 
+        } catch (Exception ex) {
             FacesUtils.controlLog("SEVERE", "Error en la clase LoginControllerMB del metodo: " + ex.getMessage());
         }
         return "";
