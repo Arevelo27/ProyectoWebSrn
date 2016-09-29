@@ -26,6 +26,7 @@ import org.primefaces.context.RequestContext;
 public class RolControllerMB implements GenericBean<SrnTblRol>, Serializable {
 
     private SrnTblRol rol;
+    private int id;
     private String desc;
 
     @EJB
@@ -47,6 +48,7 @@ public class RolControllerMB implements GenericBean<SrnTblRol>, Serializable {
     @Override
     public void verForm() {
         rol = new SrnTblRol();
+        id = 0;
         desc = "";
         form = true;
         edit = false;
@@ -86,14 +88,14 @@ public class RolControllerMB implements GenericBean<SrnTblRol>, Serializable {
         try {
             if (preAction()) {
                 if (!edit) {
-                    int id = 0;
                     id = rolFacade.findMaxId();
                     if (rolFacade.find(id) == null) {
                         rol.setNumIdRol(id);
                         rol.setStrDescripcion(desc);
                         rolFacade.create(rol);
 
-                        desc = "";
+                        vaciarVariables();
+
                         RequestContext.getCurrentInstance();
                         FacesUtils.addInfoMessage("Registro exitoso");
 //                    }
@@ -101,7 +103,7 @@ public class RolControllerMB implements GenericBean<SrnTblRol>, Serializable {
                 } else {
                     rol.setStrDescripcion(desc);
                     rolFacade.edit(rol);
-                    
+
                     RequestContext.getCurrentInstance();
                     FacesUtils.addInfoMessage("Actualizacón exitosa");
                 }
@@ -109,6 +111,13 @@ public class RolControllerMB implements GenericBean<SrnTblRol>, Serializable {
         } catch (Exception e) {
         }
         return navegacion;
+    }
+
+    public void vaciarVariables() {
+        int id;
+        desc = "";
+        id = 0;
+        rol = new SrnTblRol();
     }
 
     @Override
