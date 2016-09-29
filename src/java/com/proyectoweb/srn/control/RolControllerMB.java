@@ -28,7 +28,8 @@ public class RolControllerMB implements GenericBean<SrnTblRol>, Serializable {
     private SrnTblRol rol;
     private int id;
     private String desc;
-
+    
+    /*Debemos cambiar este ejb e investigar otro servicio*/
     @EJB
     private SrnTblRolFacade rolFacade;
     private boolean edit = false;
