@@ -24,7 +24,7 @@
                 <br></br>
             </p:commandButton>
 
-            <p:panel header="Contenido #2" toggleable="true" rendered="#{rolBn.form}" >
+            <p:panel header="#{msg['formularioRegistro']}" toggleable="true" rendered="#{rolBn.form}" >
                 <p:panelGrid columns="3"  >
 
                     <h:outputText value="#{msg['frmRol.descripciom']}:"/>
@@ -56,8 +56,8 @@
                     <p:commandButton icon="ui-icon-trash"
                                      actionListener="#{rolBn.eliminarItem(r)}"
                                      process="@this" update="@all">
-                        <p:confirm header="Confirmacion"
-                                   message="Desea eliminar este item ?" icon="ui-icon-alert"></p:confirm>
+                        <p:confirm header="#{msg['confirmacion']}"
+                                   message="#{msg['eliminarItem']}" icon="ui-icon-alert"></p:confirm>
                     </p:commandButton>
 
                     <p:confirmDialog global="true" showEffect="fade"

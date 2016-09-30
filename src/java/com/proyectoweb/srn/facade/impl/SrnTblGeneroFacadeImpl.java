@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.proyectoweb.srn.persistencia;
+package com.proyectoweb.srn.facade.impl;
 
-import com.proyectoweb.srn.modelo.SrnTblEstado;
+import com.proyectoweb.srn.facade.SrnTblGeneroFacade;
+import com.proyectoweb.srn.modelo.SrnTblGenero;
 import com.proyectoweb.srn.utilidades.UtilidadesSeguridad;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -16,7 +17,8 @@ import javax.persistence.PersistenceContext;
  * @author TSI
  */
 @Stateless
-public class SrnTblEstadoFacade extends AbstractFacade<SrnTblEstado> {
+public class SrnTblGeneroFacadeImpl extends GenericFacadeImpl<SrnTblGenero, Integer> implements SrnTblGeneroFacade {
+
     @PersistenceContext(unitName = UtilidadesSeguridad.NOMBRE_PERSISTENCIA)
     private EntityManager em;
 
@@ -25,8 +27,8 @@ public class SrnTblEstadoFacade extends AbstractFacade<SrnTblEstado> {
         return em;
     }
 
-    public SrnTblEstadoFacade() {
-        super(SrnTblEstado.class);
+    public SrnTblGeneroFacadeImpl() {
+        super(SrnTblGenero.class);
     }
-    
+
 }

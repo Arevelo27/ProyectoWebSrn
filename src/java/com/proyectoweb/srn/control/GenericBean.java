@@ -4,14 +4,14 @@
  */
 package com.proyectoweb.srn.control;
 
-import java.io.Serializable;
-import java.util.List;
-
 /**
  *
  * @author Andres-Desarrollo2
+ * @param <T>
  */
 public interface GenericBean<T> {
+
+    void buscarTodos() throws Exception;
 
     void verForm();
 

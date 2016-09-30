@@ -6,15 +6,15 @@
 package com.proyectoweb.srn.control;
 
 import com.proyectoweb.srn.modelo.SrnTblRol;
-import com.proyectoweb.srn.persistencia.SrnTblRolFacade;
+import com.proyectoweb.srn.services.RolService;
 import com.proyectoweb.srn.utilidades.FacesUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -28,22 +28,30 @@ public class RolControllerMB implements GenericBean<SrnTblRol>, Serializable {
     private SrnTblRol rol;
     private int id;
     private String desc;
-    
+
     /*Debemos cambiar este ejb e investigar otro servicio*/
-    @EJB
-    private SrnTblRolFacade rolFacade;
+//    @ManagedProperty(value = "#{rolService}")
+    @Inject
+    private RolService rolService;
+
     private boolean edit = false;
     private boolean form = false;
 
-    private List<SrnTblRol> listRol = new ArrayList<SrnTblRol>();
+    private List<SrnTblRol> listRol;
 
     @PostConstruct
     public void init() {
-        lista();
+        try {
+            listRol = new ArrayList<SrnTblRol>();
+            buscarTodos();
+        } catch (Exception e) {
+            FacesUtils.controlLog("SEVERE", "Error en la clase LoginControllerMB del metodo init: " + e.getMessage());
+        }
     }
 
-    public void lista() {
-        listRol = rolFacade.findAll();
+    @Override
+    public void buscarTodos() throws Exception {
+        listRol = rolService.buscarTodos();
     }
 
     @Override
@@ -57,9 +65,13 @@ public class RolControllerMB implements GenericBean<SrnTblRol>, Serializable {
 
     @Override
     public void volverForm() {
-        form = false;
-        edit = false;
-        lista();
+        try {
+            form = false;
+            edit = false;
+            buscarTodos();
+        } catch (Exception e) {
+            FacesUtils.controlLog("SEVERE", "Error en la clase LoginControllerMB del metodo volverForm: " + e.getMessage());
+        }
     }
 
     /**
@@ -77,9 +89,10 @@ public class RolControllerMB implements GenericBean<SrnTblRol>, Serializable {
     @Override
     public void eliminarItem(SrnTblRol r) {
         try {
-            rolFacade.remove(r);
-            lista();
+            rolService.remove(r);
+            buscarTodos();
         } catch (Exception e) {
+            FacesUtils.controlLog("SEVERE", "Error en la clase LoginControllerMB del metodo eliminarItem: " + e.getMessage());
         }
     }
 
@@ -89,11 +102,11 @@ public class RolControllerMB implements GenericBean<SrnTblRol>, Serializable {
         try {
             if (preAction()) {
                 if (!edit) {
-                    id = rolFacade.findMaxId();
-                    if (rolFacade.find(id) == null) {
+                    id = rolService.findMaxId();
+                    if (rolService.find(id) == null) {
                         rol.setNumIdRol(id);
                         rol.setStrDescripcion(desc);
-                        rolFacade.create(rol);
+                        rolService.create(rol);
 
                         vaciarVariables();
 
@@ -103,19 +116,19 @@ public class RolControllerMB implements GenericBean<SrnTblRol>, Serializable {
                     }
                 } else {
                     rol.setStrDescripcion(desc);
-                    rolFacade.edit(rol);
+                    rolService.edit(rol);
 
                     RequestContext.getCurrentInstance();
                     FacesUtils.addInfoMessage("Actualizacón exitosa");
                 }
             }
         } catch (Exception e) {
+            FacesUtils.controlLog("SEVERE", "Error en la clase RolControllerMB del metodo aceptar: " + e.getMessage());
         }
         return navegacion;
     }
 
     public void vaciarVariables() {
-        int id;
         desc = "";
         id = 0;
         rol = new SrnTblRol();

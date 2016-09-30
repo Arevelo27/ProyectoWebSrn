@@ -6,14 +6,14 @@
 package com.proyectoweb.srn.componentes.selectores;
 
 import com.proyectoweb.srn.modelo.SrnTblTipoDocumento;
-import com.proyectoweb.srn.persistencia.SrnTblTipoDocumentoFacade;
+import com.proyectoweb.srn.services.SelectorTipoDocService;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.model.SelectItem;
+import javax.inject.Inject;
 
 /**
  *
@@ -23,8 +23,8 @@ import javax.faces.model.SelectItem;
 @RequestScoped
 public class SelectorTipoDoc extends SelectorBase<SrnTblTipoDocumento, Integer> {
 
-    @EJB
-    private final SrnTblTipoDocumentoFacade tipoDocumentoFacade = new SrnTblTipoDocumentoFacade();
+    @Inject
+    private SelectorTipoDocService tipoDocService;
 
     @PostConstruct
     public void init() {
@@ -33,7 +33,7 @@ public class SelectorTipoDoc extends SelectorBase<SrnTblTipoDocumento, Integer> 
 
     @Override
     public void cargarLista() {
-        List<SrnTblTipoDocumento> listado = tipoDocumentoFacade.findAll();
+        List<SrnTblTipoDocumento> listado = tipoDocService.findAll();
         setLista(new ArrayList<SelectItem>());
         for (SrnTblTipoDocumento tipoDocumento : listado) {
             getLista().add(new SelectItem(tipoDocumento.getStrCodTipoDoc(), tipoDocumento.getStrDescripcion()));

@@ -6,14 +6,14 @@
 package com.proyectoweb.srn.componentes.selectores;
 
 import com.proyectoweb.srn.modelo.SrnTblRol;
-import com.proyectoweb.srn.persistencia.SrnTblRolFacade;
+import com.proyectoweb.srn.services.SelectorRolService;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.model.SelectItem;
+import javax.inject.Inject;
 
 /**
  *
@@ -23,8 +23,8 @@ import javax.faces.model.SelectItem;
 @RequestScoped
 public class SelectorRol extends SelectorBase<SrnTblRol, Integer> {
 
-    @EJB
-    private final SrnTblRolFacade rolFacade = new SrnTblRolFacade();
+    @Inject
+    private SelectorRolService rolService;
 
     @PostConstruct
     public void init() {
@@ -33,7 +33,7 @@ public class SelectorRol extends SelectorBase<SrnTblRol, Integer> {
 
     @Override
     public void cargarLista() {
-        List<SrnTblRol> listado = rolFacade.findAll();
+        List<SrnTblRol> listado = rolService.findAll();
         setLista(new ArrayList<SelectItem>());
         for (SrnTblRol rol : listado) {
             getLista().add(new SelectItem(rol.getNumIdRol(), rol.getStrDescripcion()));

@@ -6,16 +6,16 @@
 package com.proyectoweb.srn.control;
 
 import com.proyectoweb.srn.modelo.SrnTblUsuario;
-import com.proyectoweb.srn.persistencia.SrnTblUsuarioFacade;
+import com.proyectoweb.srn.services.LoginService;
 import com.proyectoweb.srn.to.UsuarioTO;
 import com.proyectoweb.srn.utilidades.FacesUtils;
 import com.proyectoweb.srn.utilidades.UtilidadesSeguridad;
 import java.io.Serializable;
-import javax.ejb.EJB;
 import javax.faces.application.ViewExpiredException;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.context.RequestContext;
 
@@ -24,17 +24,20 @@ import org.primefaces.context.RequestContext;
  * @author TSI
  */
 @ManagedBean(name = "login")
-@SessionScoped
+@RequestScoped
 public class LoginControllerMB implements Serializable {
 
+//    private static final long serialVersionUID = 1L;
     private String username;
     private String password;
     private UsuarioTO usuarioTo;
     private final HttpServletRequest httpServletRequest;
     private SrnTblUsuario usuario;
+    boolean esNull;
 
-    @EJB
-    private SrnTblUsuarioFacade usuariosFacade;
+//    @ManagedProperty(value = "#{loginService}")
+    @Inject
+    private LoginService loginService;
 
     /**
      *
@@ -50,7 +53,6 @@ public class LoginControllerMB implements Serializable {
      * @return
      */
     public String loginControl() {
-        boolean esNull;
         try {
             usuarioTo = new UsuarioTO();
             String password_md5 = UtilidadesSeguridad.getMD5(this.password);
@@ -58,12 +60,12 @@ public class LoginControllerMB implements Serializable {
 
             esNull = FacesUtils.isNotNull(username) && FacesUtils.isNotNull(password);
             if (esNull) {
-                if (usuariosFacade.LoginControl(username, password_md5)) {
+                if (loginService.LoginControl(username, password_md5)) {
                     esNull = false;
-                    usuario = usuariosFacade.LoginSession(username, password_md5);
+                    usuario = loginService.login(username, password_md5);
 
                     usuarioTo.setApellidos(usuario.getApellido());
-                    usuarioTo.setCodigo(usuario.getCodDocumento()+"");
+                    usuarioTo.setCodigo(usuario.getCodDocumento() + "");
                     usuarioTo.setContrasena(password_md5);
                     usuarioTo.setEstado(usuario.getEstado().getStrCodEstado());
                     usuarioTo.setNombre(usuario.getNombre());
@@ -82,9 +84,10 @@ public class LoginControllerMB implements Serializable {
             FacesUtils.addErrorMessage("Usuario o Clave incorrecta!!!");
 
         } catch (ViewExpiredException e) {
-            FacesUtils.controlLog("INFO", e);
+            FacesUtils.controlLog("INFO", e.getMessage());
             UtilidadesSeguridad.getControlSession();
         } catch (Exception ex) {
+            System.out.println("Error en la clase LoginControllerMB del metodo loginControl: " + ex.getMessage());
             FacesUtils.controlLog("SEVERE", "Error en la clase LoginControllerMB del metodo: " + ex.getMessage());
         }
         return "";
@@ -127,6 +130,10 @@ public class LoginControllerMB implements Serializable {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setLoginService(LoginService loginService) {
+        this.loginService = loginService;
     }
 
     /**

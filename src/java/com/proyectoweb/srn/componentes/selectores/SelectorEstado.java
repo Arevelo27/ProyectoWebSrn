@@ -5,14 +5,14 @@
 package com.proyectoweb.srn.componentes.selectores;
 
 import com.proyectoweb.srn.modelo.SrnTblEstado;
-import com.proyectoweb.srn.persistencia.SrnTblEstadoFacade;
+import com.proyectoweb.srn.services.SelectorEstadoService;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.model.SelectItem;
+import javax.inject.Inject;
 
 /**
  *
@@ -22,8 +22,8 @@ import javax.faces.model.SelectItem;
 @RequestScoped
 public class SelectorEstado extends SelectorBase<SrnTblEstado, Integer> {
 
-    @EJB
-    private final SrnTblEstadoFacade estadoFacade = new SrnTblEstadoFacade();
+    @Inject
+    private SelectorEstadoService rolService;
 
     @PostConstruct
     public void init() {
@@ -32,7 +32,7 @@ public class SelectorEstado extends SelectorBase<SrnTblEstado, Integer> {
 
     @Override
     public void cargarLista() {
-        List<SrnTblEstado> listado = estadoFacade.findAll();
+        List<SrnTblEstado> listado = rolService.findAll();
         setLista(new ArrayList<SelectItem>());
         for (SrnTblEstado estado : listado) {
             getLista().add(new SelectItem(estado.getStrCodEstado(), estado.getStrDescripcion()));

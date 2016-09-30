@@ -6,14 +6,15 @@
 package com.proyectoweb.srn.control;
 
 import com.proyectoweb.srn.modelo.SrnTblUsuario;
-import com.proyectoweb.srn.persistencia.SrnTblUsuarioFacade;
+import com.proyectoweb.srn.services.UsuarioService;
+import com.proyectoweb.srn.utilidades.FacesUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.RequestScoped;
+import javax.inject.Inject;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -21,21 +22,33 @@ import org.primefaces.context.RequestContext;
  * @author TSI
  */
 @ManagedBean(name = "usuarioBn")
-@ViewScoped
+@RequestScoped
 public class UsuarioControllerMB implements GenericBean<SrnTblUsuario>, Serializable {
 
     private SrnTblUsuario user;
 
-    @EJB
-    private SrnTblUsuarioFacade userFacade;
+//    @ManagedProperty(value = "#{usuarioService}")
+    @Inject
+    private UsuarioService usuarioService;
+
     private boolean edit = false;
     private boolean form = false;
 
-    private List<SrnTblUsuario> listUser = new ArrayList<SrnTblUsuario>();
+    private List<SrnTblUsuario> listUser;
 
     @PostConstruct
     public void init() {
-        listUser = userFacade.findAll();
+        try {
+            listUser = new ArrayList<SrnTblUsuario>();
+            buscarTodos();
+        } catch (Exception e) {
+            FacesUtils.controlLog("SEVERE", "Error en la clase UsuarioControllerMB del metodo init: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void buscarTodos() throws Exception {
+        listUser = usuarioService.findAll();
     }
 
     @Override
@@ -62,8 +75,8 @@ public class UsuarioControllerMB implements GenericBean<SrnTblUsuario>, Serializ
     @Override
     public void eliminarItem(SrnTblUsuario u) {
         try {
-            userFacade.remove(u);
-            listUser = userFacade.findAll();
+            usuarioService.remove(u);
+            listUser = usuarioService.findAll();
         } catch (Exception e) {
         }
     }
@@ -81,12 +94,17 @@ public class UsuarioControllerMB implements GenericBean<SrnTblUsuario>, Serializ
 //                        navegacion = REGLA_NAVEGACION;
 //                    }
 //                    }
+                    RequestContext.getCurrentInstance();
+                    FacesUtils.addInfoMessage("Registro exitoso");
                 } else {
 //                    personaDaoImpl.update(productos);
 //                    navegacion = REGLA_NAVEGACION;
+                    RequestContext.getCurrentInstance();
+                    FacesUtils.addInfoMessage("Actualizacón exitosa");
                 }
             }
         } catch (Exception e) {
+            FacesUtils.controlLog("SEVERE", "Error en la clase UsuarioControllerMB del metodo aceptar: " + e.getMessage());
         }
         return navegacion;
     }
@@ -94,7 +112,6 @@ public class UsuarioControllerMB implements GenericBean<SrnTblUsuario>, Serializ
     @Override
     public boolean preAction() {
         boolean accion = true;
-//        RequestContext.getCurrentInstance().update("growl");
         return accion;
     }
 

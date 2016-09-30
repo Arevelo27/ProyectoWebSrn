@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.proyectoweb.srn.persistencia;
+package com.proyectoweb.srn.facade.impl;
 
+import com.proyectoweb.srn.facade.GenericFacade;
+import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import javax.persistence.EntityManager;
@@ -14,8 +16,9 @@ import javax.persistence.Query;
  *
  * @author TSI
  * @param <T>
+ * @param <E>
  */
-public abstract class AbstractFacade<T> {
+public abstract class GenericFacadeImpl<T, E extends Serializable> implements GenericFacade<T, E> {
 
     private final Class<T> entityClass;
     private EntityManager em;
@@ -24,7 +27,7 @@ public abstract class AbstractFacade<T> {
      *
      * @param entityClass
      */
-    public AbstractFacade(Class<T> entityClass) {
+    public GenericFacadeImpl(Class<T> entityClass) {
         this.entityClass = entityClass;
     }
 
@@ -38,8 +41,8 @@ public abstract class AbstractFacade<T> {
      *
      * @param entity
      */
+    @Override
     public void create(T entity) {
-//        em.persist(entity);
         getEntityManager().persist(entity);
     }
 
@@ -47,6 +50,7 @@ public abstract class AbstractFacade<T> {
      *
      * @param entity
      */
+    @Override
     public void edit(T entity) {
         getEntityManager().merge(entity);
     }
@@ -72,6 +76,7 @@ public abstract class AbstractFacade<T> {
      *
      * @return
      */
+    @Override
     public List<T> findAll() {
         List<T> list = null;
         try {
@@ -134,6 +139,7 @@ public abstract class AbstractFacade<T> {
      * @param maxPerPage
      * @return
      */
+    @Override
     public List<T> findByCriteria(int startingAt, int maxPerPage) {
         List<T> list = null;
         try {
@@ -152,6 +158,7 @@ public abstract class AbstractFacade<T> {
      *
      * @return
      */
+    @Override
     public Integer countAll() {
         Integer id = 1;
         try {

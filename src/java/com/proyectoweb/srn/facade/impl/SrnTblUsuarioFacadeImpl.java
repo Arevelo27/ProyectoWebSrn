@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.proyectoweb.srn.persistencia;
+package com.proyectoweb.srn.facade.impl;
 
+import com.proyectoweb.srn.facade.SrnTblUsuarioFacade;
 import com.proyectoweb.srn.modelo.SrnTblUsuario;
 import com.proyectoweb.srn.utilidades.UtilidadesSeguridad;
 import java.util.logging.Level;
@@ -18,7 +19,7 @@ import javax.persistence.Query;
  * @author TSI
  */
 @Stateless
-public class SrnTblUsuarioFacade extends AbstractFacade<SrnTblUsuario> {
+public class SrnTblUsuarioFacadeImpl extends GenericFacadeImpl<SrnTblUsuario, String> implements SrnTblUsuarioFacade{
     @PersistenceContext(unitName = UtilidadesSeguridad.NOMBRE_PERSISTENCIA)
     private EntityManager em;
 
@@ -27,7 +28,7 @@ public class SrnTblUsuarioFacade extends AbstractFacade<SrnTblUsuario> {
         return em;
     }
 
-    public SrnTblUsuarioFacade() {
+    public SrnTblUsuarioFacadeImpl() {
         super(SrnTblUsuario.class);
     }
     
@@ -37,6 +38,7 @@ public class SrnTblUsuarioFacade extends AbstractFacade<SrnTblUsuario> {
      * @param password
      * @return
      */
+    @Override
     public boolean LoginControl(String login, String password) {
         try {
             Query q = em.createNamedQuery("SrnTblUsuario.loginControl", SrnTblUsuario.class).setParameter("username", login).setParameter("password", password);
@@ -54,16 +56,18 @@ public class SrnTblUsuarioFacade extends AbstractFacade<SrnTblUsuario> {
     /**
      *
      * @param login
-     * @param password
+     * @param contrasena
      * @return
+     * @throws java.lang.Exception
      */
-    public SrnTblUsuario LoginSession(String login, String password) {
+    @Override
+    public SrnTblUsuario login(String login, String contrasena) throws Exception {
         SrnTblUsuario usuario = null;
         try {
-            Query q = em.createNamedQuery("SrnTblUsuario.loginControl", SrnTblUsuario.class).setParameter("username", login).setParameter("password", password);
+            Query q = em.createNamedQuery("SrnTblUsuario.loginControl", SrnTblUsuario.class).setParameter("username", login).setParameter("password", contrasena);
             usuario = (SrnTblUsuario) q.getSingleResult();
         } catch (Exception e) {
-            System.out.println("error metodo LoginControl: " + e.getMessage() + " level: " + Level.SEVERE + " .::. " + e);;
+            System.out.println("error metodo LoginControl: " + e.getMessage() + " level: " + Level.SEVERE + " .::. " + e);
         }
         return usuario;
     }

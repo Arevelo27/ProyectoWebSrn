@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.proyectoweb.srn.persistencia;
+package com.proyectoweb.srn.facade.impl;
 
+import com.proyectoweb.srn.facade.SrnTblRolFacade;
 import com.proyectoweb.srn.modelo.SrnTblRol;
 import com.proyectoweb.srn.utilidades.UtilidadesSeguridad;
+import java.util.List;
 import java.util.logging.Level;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -17,7 +19,8 @@ import javax.persistence.PersistenceContext;
  * @author TSI
  */
 @Stateless
-public class SrnTblRolFacade extends AbstractFacade<SrnTblRol> {
+public class SrnTblRolFacadeImpl extends GenericFacadeImpl<SrnTblRol, Integer> implements SrnTblRolFacade {
+
     @PersistenceContext(unitName = UtilidadesSeguridad.NOMBRE_PERSISTENCIA)
     private EntityManager em;
 
@@ -26,10 +29,11 @@ public class SrnTblRolFacade extends AbstractFacade<SrnTblRol> {
         return em;
     }
 
-    public SrnTblRolFacade() {
+    public SrnTblRolFacadeImpl() {
         super(SrnTblRol.class);
     }
-    
+
+    @Override
     public Integer findMaxId() {
         Integer id = 1;
         try {
@@ -44,5 +48,10 @@ public class SrnTblRolFacade extends AbstractFacade<SrnTblRol> {
         }
         return id;
 
+    }
+
+    @Override
+    public List<SrnTblRol> buscarTodos() throws Exception {
+        return findAll();
     }
 }

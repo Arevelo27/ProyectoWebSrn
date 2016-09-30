@@ -5,7 +5,7 @@
     session.invalidate();
 %>
 <script type="text/javascript">
-	window.location = "index.jsp"
+	window.location = "index.jsp";
 </script>
 
 

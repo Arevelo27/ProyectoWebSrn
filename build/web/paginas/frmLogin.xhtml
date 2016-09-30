@@ -5,7 +5,9 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Login</title>
+        <title>#{msg['nombreApp']}</title>
+        <link href="../resources/css/cssLayout.css" rel="stylesheet" type="text/css"/>
+        <f:loadBundle basename="com.proyectoweb.srn.utilidades.messages" var="msg"/>
     </h:head>
     <h:body>
         <p:growl id="growl" sticky="true" showDetail="true"/>
@@ -17,9 +19,9 @@
                     <p:panel id="panel1" style="position: absolute; margin-top: 250px; margin-left: 500px; " styleClass="centered"> 
                         <f:facet name="header">Login Form</f:facet>
                         <p:panelGrid id="panelgLogin" columns="2" style="width:300px;height:80px;" >
-                            <h:outputText value="Username"/>
+                            <h:outputText value="Username: "/>
                             <p:inputText value="#{login.username}"/>
-                            <h:outputText value="Password"/>
+                            <h:outputText value="Password: "/>
                             <p:password value="#{login.password}"/>
                         </p:panelGrid>
                         <f:facet name="footer" >

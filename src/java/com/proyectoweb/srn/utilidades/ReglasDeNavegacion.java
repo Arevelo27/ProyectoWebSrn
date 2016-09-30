@@ -7,6 +7,7 @@ package com.proyectoweb.srn.utilidades;
 
 import com.proyectoweb.srn.to.UsuarioTO;
 import java.io.Serializable;
+import javax.faces.application.ViewExpiredException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -30,8 +31,11 @@ public class ReglasDeNavegacion implements Serializable {
             } else {
                 nombre = usuarioTo.getNombre() + " " + usuarioTo.getApellidos();
             }
-        } catch (Exception e) {
-            System.out.println("Por favor verifique su session");
+        } catch (ViewExpiredException e) {
+            FacesUtils.controlLog("SEVERE", "Error [ViewExpiredException] en la clase ReglasDeNavegacion: " + e.getMessage());
+            UtilidadesSeguridad.getControlSession();
+        } catch (Exception ex) {
+            FacesUtils.controlLog("SEVERE", "Error [Exception] en la clase ReglasDeNavegacion: " + ex.getMessage());
         }
     }
 //    public static String usuario = "inicio.xhtml?faces-redirect=true";
