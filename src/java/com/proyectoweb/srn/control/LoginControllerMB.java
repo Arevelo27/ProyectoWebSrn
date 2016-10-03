@@ -73,7 +73,7 @@ public class LoginControllerMB implements Serializable {
                     usuarioTo.setLogin(username);
 
                     FacesUtils.getSession().setAttribute("usuario", usuarioTo);
-                    return "frmInicio";
+                    return "frmInicio.xhtml?faces-redirect=true";
                 }
             } else {
                 RequestContext.getCurrentInstance().update("growl");

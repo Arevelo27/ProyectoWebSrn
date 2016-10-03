@@ -19,12 +19,12 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class ReglasDeNavegacion implements Serializable {
 
-    private final UsuarioTO usuarioTo;
+    private UsuarioTO usuarioTo;
     private String nombre;
 
     public ReglasDeNavegacion() {
-        usuarioTo = (UsuarioTO) FacesUtils.getSession().getAttribute("usuario");
         try {
+            usuarioTo = (UsuarioTO) FacesUtils.getSession().getAttribute("usuario");
             if (usuarioTo == null) {
                 System.out.println("No hay registro de usuario");
                 UtilidadesSeguridad.getControlSession();
@@ -69,11 +69,11 @@ public class ReglasDeNavegacion implements Serializable {
     }
 
     public String getUrlRol() {
-        return "hello";
+        return "frmRol";
     }
 
     public String getUrlPermisos() {
-        return "index";
+        return "frmPermisos";
     }
 
 }

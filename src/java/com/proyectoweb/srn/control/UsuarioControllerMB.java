@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 import org.primefaces.context.RequestContext;
 
@@ -22,7 +22,7 @@ import org.primefaces.context.RequestContext;
  * @author TSI
  */
 @ManagedBean(name = "usuarioBn")
-@RequestScoped
+@ViewScoped
 public class UsuarioControllerMB implements GenericBean<SrnTblUsuario>, Serializable {
 
     private SrnTblUsuario user;
